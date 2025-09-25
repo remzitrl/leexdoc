@@ -58,6 +58,25 @@ rm -rf test-files
 rm -rf .git
 rm -rf .github
 
+# Ensure essential files are present
+echo "🔍 Verifying essential deployment files..."
+if [ ! -f "Dockerfile" ]; then
+    echo "❌ Dockerfile not found in deployment package!"
+    exit 1
+fi
+
+if [ ! -f "captain-definition" ]; then
+    echo "❌ captain-definition not found in deployment package!"
+    exit 1
+fi
+
+if [ ! -f "package.json" ]; then
+    echo "❌ package.json not found in deployment package!"
+    exit 1
+fi
+
+echo "✅ All essential files present"
+
 # Create tar.gz for CapRover
 tar -czf ../leexdoc-deploy.tar.gz .
 
