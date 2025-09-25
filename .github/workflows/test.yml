@@ -1,0 +1,291 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run type checking
+      run: npm run typecheck
+    
+    - name: Run linting
+      run: npm run lint
+    
+    - name: Run unit tests
+      run: npm run test:run
+    
+    - name: Run unit tests with coverage
+      run: npm run test:coverage
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: mixora_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Setup test database
+      run: |
+        npx prisma generate
+        npx prisma db push --schema=./prisma/schema.prisma
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/mixora_test
+        REDIS_URL: redis://localhost:6379
+    
+    - name: Run integration tests
+      run: npm run test:run -- --reporter=verbose
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/mixora_test
+        REDIS_URL: redis://localhost:6379
+        NEXTAUTH_SECRET: test-secret
+        NEXTAUTH_URL: http://localhost:3000
+        STORAGE_PROVIDER: local
+
+  e2e-tests:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: mixora_e2e
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps
+    
+    - name: Setup test database
+      run: |
+        npx prisma generate
+        npx prisma db push --schema=./prisma/schema.prisma
+        npm run prisma:seed
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/mixora_e2e
+        REDIS_URL: redis://localhost:6379
+    
+    - name: Build application
+      run: npm run build
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/mixora_e2e
+        REDIS_URL: redis://localhost:6379
+        NEXTAUTH_SECRET: test-secret
+        NEXTAUTH_URL: http://localhost:3000
+        STORAGE_PROVIDER: local
+    
+    - name: Run E2E tests
+      run: npm run test:e2e
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/mixora_e2e
+        REDIS_URL: redis://localhost:6379
+        NEXTAUTH_SECRET: test-secret
+        NEXTAUTH_URL: http://localhost:3000
+        STORAGE_PROVIDER: local
+    
+    - name: Upload E2E test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
+
+  security-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run security audit
+      run: npm audit --audit-level moderate
+    
+    - name: Run dependency check
+      run: npx audit-ci --config audit-ci.json
+    
+    - name: Run security tests
+      run: npm run test:run -- --grep "security"
+    
+    - name: Upload security results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-results
+        path: security-results.json
+        retention-days: 30
+
+  performance-tests:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: mixora_perf
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Setup test database
+      run: |
+        npx prisma generate
+        npx prisma db push --schema=./prisma/schema.prisma
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/mixora_perf
+        REDIS_URL: redis://localhost:6379
+    
+    - name: Run performance tests
+      run: npm run test:run -- --grep "performance"
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/mixora_perf
+        REDIS_URL: redis://localhost:6379
+        NEXTAUTH_SECRET: test-secret
+        NEXTAUTH_URL: http://localhost:3000
+        STORAGE_PROVIDER: local
+    
+    - name: Upload performance results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: performance-results
+        path: performance-results.json
+        retention-days: 30
+
+  test-results:
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests, e2e-tests, security-tests, performance-tests]
+    if: always()
+    
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
+    
+    - name: Combine test results
+      run: |
+        echo "## Test Results Summary" >> $GITHUB_STEP_SUMMARY
+        echo "| Test Suite | Status |" >> $GITHUB_STEP_SUMMARY
+        echo "|------------|--------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Unit Tests | ${{ needs.unit-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Integration Tests | ${{ needs.integration-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| E2E Tests | ${{ needs.e2e-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Security Tests | ${{ needs.security-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Performance Tests | ${{ needs.performance-tests.result }} |" >> $GITHUB_STEP_SUMMARY

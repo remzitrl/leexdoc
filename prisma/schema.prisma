@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String               @id @default(cuid())
+  email               String               @unique
+  passwordHash        String
+  displayName         String
+  createdAt           DateTime             @default(now())
+  documents           Document[]
+  downloads           Download[]
+  passwordResetTokens PasswordResetToken[]
+  userSetting         UserSetting?
+
+  @@map("users")
+}
+
+model Document {
+  id               String            @id @default(cuid())
+  ownerId          String
+  title            String
+  originalName     String
+  mimeType         String
+  fileSize         Int
+  fileKey          String            // S3 key for the file
+  thumbnailKey     String?           // Optional thumbnail for images/videos
+  category         DocumentCategory
+  tags             String[]          @default([])
+  description      String?
+  isPublic         Boolean           @default(false)
+  status           DocumentStatus    @default(Processing)
+  uploadedAt       DateTime          @default(now())
+  lastAccessedAt   DateTime?
+  accessCount      Int               @default(0)
+  downloads        Download[]
+  owner            User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@map("documents")
+}
+
+model Download {
+  id          String        @id @default(cuid())
+  userId      String
+  documentId  String
+  state       DownloadState @default(Prefetching)
+  bytesTotal  Int?
+  bytesStored Int?
+  updatedAt   DateTime      @updatedAt
+  document    Document      @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, documentId])
+  @@map("downloads")
+}
+
+model UserSetting {
+  userId               String       @id
+  theme                String?
+  language             String?
+  downloadOverWifiOnly Boolean      @default(true)
+  autoDownload         Boolean      @default(false)
+  user                 User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_settings")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  used      Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_reset_tokens")
+}
+
+enum DocumentCategory {
+  PDF
+  Audio
+  Video
+  Image
+  Document
+  Archive
+  Other
+}
+
+enum DocumentStatus {
+  Processing
+  Ready
+  Failed
+}
+
+enum DownloadState {
+  Prefetching
+  Available
+  Error
+}

@@ -1,0 +1,156 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Run tests
+        run: npm run test:run
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/leexdoc_test
+          REDIS_URL: redis://localhost:6379
+          NEXTAUTH_SECRET: test-secret
+          NEXTAUTH_URL: http://localhost:3000
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          echo "## What's Changed" >> $GITHUB_STEP_SUMMARY
+          git log --pretty=format:"- %s (%h)" $(git describe --tags --abbrev=0 HEAD^)..HEAD >> $GITHUB_STEP_SUMMARY
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            ## What's Changed
+            
+            This release includes the following changes:
+            
+            - Bug fixes and improvements
+            - New features and enhancements
+            - Documentation updates
+            
+            ## Installation
+            
+            ```bash
+            # Clone the repository
+            git clone https://github.com/leexdoc/leexdoc.git
+            cd leexdoc
+            
+            # Install dependencies
+            npm install
+            
+            # Copy environment file
+            cp env.production.example .env
+            
+            # Start the application
+            npm run dev
+            ```
+            
+            ## Docker
+            
+            ```bash
+            # Pull the latest image
+            docker pull leexdoc:latest
+            
+            # Run the container
+            docker run -p 3000:3000 leexdoc:latest
+            ```
+            
+            ## Full Changelog
+            
+            ${{ steps.changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Assets
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: .next
+          asset_name: build-files.tar.gz
+          asset_content_type: application/gzip
+
+  docker-release:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    needs: release
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            leexdoc:latest
+            leexdoc:${{ steps.version.outputs.VERSION }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  notify:
+    name: Notify Release
+    runs-on: ubuntu-latest
+    needs: [release, docker-release]
+    if: always()
+    
+    steps:
+      - name: Notify Discord
+        if: success()
+        uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        with:
+          args: '🚀 **LeexDoc v${{ github.ref_name }}** has been released! Check it out at https://github.com/leexdoc/leexdoc/releases/tag/${{ github.ref_name }}'
