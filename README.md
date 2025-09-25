@@ -583,4 +583,4 @@ For support, email support@leexdoc.com or join our Discord community.
 
 ---
 
-**Made with ❤️ by the LeexDoc Team**
+**Made by Ahmet Tural**
