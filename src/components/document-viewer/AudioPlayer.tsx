@@ -36,7 +36,6 @@ export default function AudioPlayer({ document }: AudioPlayerProps) {
       try {
         // Check if document has a direct URL (for testing)
         if (document.url) {
-          console.log('Using direct URL for audio:', document.url)
           setAudioUrl(document.url)
           setIsLoading(false)
           return
@@ -46,14 +45,6 @@ export default function AudioPlayer({ document }: AudioPlayerProps) {
         if (!response.ok) throw new Error('Failed to load audio')
         
         const blob = await response.blob()
-        console.log('Audio blob loaded:', {
-          size: blob.size,
-          type: blob.type,
-          mimeType: document.mimeType,
-          fileName: document.originalName,
-          responseStatus: response.status,
-          responseHeaders: Object.fromEntries(response.headers.entries())
-        })
         
         if (blob.size === 0) {
           throw new Error('Empty audio file')
@@ -61,20 +52,13 @@ export default function AudioPlayer({ document }: AudioPlayerProps) {
         
         // Check if blob type matches expected MIME type
         if (blob.type !== document.mimeType) {
-          console.warn('MIME type mismatch:', {
-            blobType: blob.type,
-            expectedType: document.mimeType,
-            fileName: document.originalName
-          })
           // Don't treat MIME type mismatch as an error, just log it
         }
         
         const url = URL.createObjectURL(blob)
-        console.log('Audio URL created:', url)
         setAudioUrl(url)
         setIsLoading(false)
       } catch (error) {
-        console.error('Error loading audio:', error)
         setHasError(true)
         setIsLoading(false)
       }
@@ -98,12 +82,6 @@ export default function AudioPlayer({ document }: AudioPlayerProps) {
     const handleEnded = () => setIsPlaying(false)
     const handleError = () => {
       const error = audio.error
-      console.error('Audio playback error:', {
-        code: error?.code,
-        message: error?.message,
-        mimeType: document.mimeType,
-        fileName: document.originalName
-      })
       setHasError(true)
       setIsLoading(false)
     }
@@ -240,27 +218,9 @@ export default function AudioPlayer({ document }: AudioPlayerProps) {
             case 4: errorMessage = 'MEDIA_ERR_SRC_NOT_SUPPORTED - Audio format not supported'; break
           }
           
-          console.error('Audio element error:', {
-            event: e,
-            error: error,
-            code: error?.code,
-            message: error?.message,
-            detailedMessage: errorMessage,
-            networkState: target.networkState,
-            readyState: target.readyState,
-            src: target.src,
-            mimeType: document.mimeType,
-            fileName: document.originalName,
-            blobType: audioUrl ? 'blob URL' : 'no URL',
-            audioUrl: audioUrl
-          })
           
           // For code 4 (unsupported format), try to fallback
           if (error?.code === 4) {
-            console.warn('Audio format not supported, trying alternative approach:', {
-              mimeType: document.mimeType,
-              fileName: document.originalName
-            })
           }
           
           setHasError(true)

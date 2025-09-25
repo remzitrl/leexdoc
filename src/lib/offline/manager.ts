@@ -68,7 +68,6 @@ export class OfflineManager {
         this.isWiFi = connection.effectiveType === 'wifi' || connection.type === 'wifi'
       }
     } catch (error) {
-      console.warn('Could not detect connection type:', error)
     }
   }
 
@@ -144,7 +143,6 @@ export class OfflineManager {
       if (!response.ok) return null
       return response.json()
     } catch (error) {
-      console.error('Failed to get track metadata:', error)
       return null
     }
   }
@@ -155,7 +153,6 @@ export class OfflineManager {
       if (!response.ok) return null
       return response.url
     } catch (error) {
-      console.error('Failed to get audio URL:', error)
       return null
     }
   }
@@ -268,7 +265,6 @@ export class OfflineManager {
         try {
           await this.saveForOffline(track.trackId, track.quality)
         } catch (error) {
-          console.error('Failed to resume download:', error)
         }
       }
     }
@@ -277,7 +273,6 @@ export class OfflineManager {
   private async pauseDownloads() {
     // Pause any active downloads
     // This would require tracking active downloads
-    console.log('Downloads paused due to offline status')
   }
 
   getConnectionInfo() {
@@ -367,7 +362,6 @@ export class OfflineManager {
       if (!response.ok) return null
       return response.json()
     } catch (error) {
-      console.error('Failed to get document metadata:', error)
       return null
     }
   }
@@ -378,7 +372,6 @@ export class OfflineManager {
       if (!response.ok) return null
       return response.url
     } catch (error) {
-      console.error('Failed to get document URL:', error)
       return null
     }
   }

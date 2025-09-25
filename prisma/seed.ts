@@ -4,7 +4,6 @@ import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 
 async function main() {
-  console.log('🌱 Starting database seed...')
 
   // Create a test user
   const hashedPassword = await bcrypt.hash('password123', 12)
@@ -19,7 +18,6 @@ async function main() {
     },
   })
 
-  console.log('✅ Created user:', user.email)
 
   // Create user settings
   await prisma.userSetting.upsert({
@@ -35,7 +33,6 @@ async function main() {
     },
   })
 
-  console.log('✅ Created user settings')
 
   // Create sample tracks
   const tracks = [
@@ -89,7 +86,6 @@ async function main() {
     createdTracks.push(track)
   }
 
-  console.log('✅ Created tracks:', createdTracks.length)
 
   // Create a sample playlist
   const playlist = await prisma.playlist.create({
@@ -99,7 +95,6 @@ async function main() {
     },
   })
 
-  console.log('✅ Created playlist:', playlist.name)
 
   // Add tracks to playlist
   for (let i = 0; i < createdTracks.length; i++) {
@@ -112,7 +107,6 @@ async function main() {
     })
   }
 
-  console.log('✅ Added tracks to playlist')
 
   // Create some likes
   await prisma.like.create({
@@ -129,7 +123,6 @@ async function main() {
     },
   })
 
-  console.log('✅ Created likes')
 
   // Create download records
   for (const track of createdTracks) {
@@ -144,7 +137,6 @@ async function main() {
     })
   }
 
-  console.log('✅ Created download records')
 
   // Create a playback session
   await prisma.playbackSession.create({
@@ -156,14 +148,11 @@ async function main() {
     },
   })
 
-  console.log('✅ Created playback session')
 
-  console.log('🎉 Database seeded successfully!')
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Error seeding database:', e)
     process.exit(1)
   })
   .finally(async () => {

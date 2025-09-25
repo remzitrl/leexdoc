@@ -2,16 +2,13 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 
-// Initialize global error handlers only in Node.js server environment
 if (typeof window === 'undefined' && typeof process !== 'undefined' && process.env && process.env.NODE_ENV) {
   try {
     require('@/lib/error-handlers')
   } catch (error) {
-    console.error('Failed to load error handlers:', error)
   }
 }
 
-// Security headers configuration
 const securityHeaders = {
   'X-DNS-Prefetch-Control': 'on',
   'X-XSS-Protection': '1; mode=block',
@@ -35,11 +32,10 @@ const securityHeaders = {
   ].join('; ')
 }
 
-// Rate limiting configuration
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
 
-const RATE_LIMIT_WINDOW = 15 * 60 * 1000 // 15 minutes
-const RATE_LIMIT_MAX_REQUESTS = 100 // 100 requests per window
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000
+const RATE_LIMIT_MAX_REQUESTS = 100
 
 function getRateLimitKey(ip: string, userId?: string): string {
   return userId ? `user:${userId}` : `ip:${ip}`
@@ -63,7 +59,6 @@ function checkRateLimit(ip: string, userId?: string): boolean {
   return true
 }
 
-// Clean up old rate limit records
 setInterval(() => {
   const now = Date.now()
   for (const [key, record] of rateLimitMap.entries()) {
@@ -71,9 +66,8 @@ setInterval(() => {
       rateLimitMap.delete(key)
     }
   }
-}, 5 * 60 * 1000) // Clean up every 5 minutes
+}, 5 * 60 * 1000)
 
-// Logging function
 function logRequest(request: NextRequest, userId?: string, additionalData?: any) {
   const requestId = crypto.randomUUID()
   const ip = request.ip || request.headers.get('x-forwarded-for') || 'unknown'
@@ -82,42 +76,27 @@ function logRequest(request: NextRequest, userId?: string, additionalData?: any)
   const url = request.url
   const timestamp = new Date().toISOString()
 
-  console.log(JSON.stringify({
-    requestId,
-    userId: userId || 'anonymous',
-    ip,
-    method,
-    url,
-    userAgent,
-    timestamp,
-    ...additionalData
-  }))
 }
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const ip = request.ip || request.headers.get('x-forwarded-for') || 'unknown'
   
-  // Bypass middleware completely for file uploads
   if (pathname === '/api/upload/file' && request.method === 'POST') {
     return NextResponse.next()
   }
   
-  // Get user token for authenticated requests
   const token = await getToken({ req: request })
   const userId = token?.sub
 
-  // Log all requests
   logRequest(request, userId)
 
-  // Apply security headers to all responses
   const response = NextResponse.next()
   
   Object.entries(securityHeaders).forEach(([key, value]) => {
     response.headers.set(key, value)
   })
 
-  // Rate limiting for API routes
   if (pathname.startsWith('/api/')) {
     if (!checkRateLimit(ip, userId)) {
       logRequest(request, userId, { 
@@ -142,14 +121,11 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // CSRF protection for state-changing operations
   if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method)) {
     const origin = request.headers.get('origin')
     const host = request.headers.get('host')
     
-    // Skip CSRF check for file uploads and API routes
     if (!pathname.startsWith('/api/upload/')) {
-      // Allow same-origin requests and localhost development
       if (origin && host && !origin.includes(host) && !origin.includes('localhost')) {
         logRequest(request, userId, { 
           action: 'csrf_blocked',
@@ -171,7 +147,6 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Admin route protection
   if (pathname.startsWith('/admin')) {
     if (!token || token.role !== 'admin') {
       logRequest(request, userId, { 
@@ -193,7 +168,6 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Add request ID to headers for tracing
   response.headers.set('X-Request-ID', crypto.randomUUID())
 
   return response
@@ -201,14 +175,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     * - api/upload/file (bypass middleware for uploads)
-     */
     '/((?!_next/static|_next/image|favicon.ico|public|api/upload/file).*)',
   ],
 }

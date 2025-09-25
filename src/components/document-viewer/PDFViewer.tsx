@@ -27,7 +27,6 @@ export default function PDFViewer({ document }: PDFViewerProps) {
         const url = URL.createObjectURL(blob)
         setPdfUrl(url)
       } catch (error) {
-        console.error('Error loading PDF:', error)
       }
     }
 
@@ -153,7 +152,6 @@ export default function PDFViewer({ document }: PDFViewerProps) {
                   setTotalPages(estimatedPages)
                 }
               } catch (error) {
-                console.log('Could not determine PDF page count')
               }
             }}
           />

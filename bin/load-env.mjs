@@ -7,12 +7,10 @@ import dotenvExpand from "dotenv-expand";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const candidates = [".env.local", ".env"]; // Next ile uyumlu yükleme sırası
 
-console.log("🔧 ENV dosyaları yükleniyor...");
 
 for (const f of candidates) {
   const p = path.join(root, f);
   if (fs.existsSync(p)) {
-    console.log(`📄 ${f} yükleniyor`);
     const r = dotenv.config({ path: p });
     dotenvExpand.expand(r);
   }

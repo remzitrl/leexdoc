@@ -1,5 +1,7 @@
 # 📚 LeexDoc - Document & Media Management Platform
 
+**Developed by Ahmet Tural**
+
 A modern, secure, and feature-rich document and media management platform built with Next.js, TypeScript, and comprehensive offline capabilities.
 
 ## ✨ Features

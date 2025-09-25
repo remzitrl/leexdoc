@@ -33,20 +33,11 @@ for (const key of optional) {
 
 // Eksik varsa fail-fast
 if (missing.length > 0) {
-  console.error("❌ ENV doğrulama hatası:");
-  console.error("Eksik gerekli anahtarlar:");
-  missing.forEach(key => console.error(`- ${key}`));
-  console.error("\nMevcut anahtarlar:");
-  present.forEach(key => console.error(`+ ${key}`));
   process.exit(1);
 }
 
 // Redis durumu kontrol et
 if (!process.env.REDIS_URL || process.env.REDIS_URL.trim() === "") {
-  console.log("⚠️  REDIS_URL yok - queue=degraded, ratelimit=disabled");
 } else {
-  console.log("✅ REDIS_URL mevcut");
 }
 
-console.log("✅ ENV doğrulama başarılı");
-console.log("Mevcut anahtarlar:", present.join(", "));

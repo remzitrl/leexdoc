@@ -59,10 +59,6 @@ class Logger {
     }
 
     // Log to console in production, could be extended to log to external service
-    console.log(JSON.stringify({
-      type: 'request',
-      ...logEntry
-    }))
 
     return requestId
   }
@@ -81,10 +77,6 @@ class Logger {
     }
 
     // Log to console
-    console.log(JSON.stringify({
-      type: 'security_event',
-      ...securityEvent
-    }))
 
     // In production, you might want to send critical events to external monitoring
     if (securityEvent.severity === 'critical') {
@@ -93,17 +85,6 @@ class Logger {
   }
 
   public logError(error: Error, requestId: string, additionalData?: Record<string, any>): void {
-    console.error(JSON.stringify({
-      type: 'error',
-      requestId,
-      error: {
-        name: error.name,
-        message: error.message,
-        stack: error.stack
-      },
-      timestamp: new Date().toISOString(),
-      ...additionalData
-    }))
   }
 
   public logFileUpload(
@@ -113,19 +94,6 @@ class Logger {
     validationResult: { isValid: boolean; error?: string },
     ip: string
   ): void {
-    console.log(JSON.stringify({
-      type: 'file_upload',
-      requestId,
-      userId,
-      ip,
-      files: files.map(f => ({
-        name: f.name,
-        size: f.size,
-        type: f.type
-      })),
-      validationResult,
-      timestamp: new Date().toISOString()
-    }))
 
     if (!validationResult.isValid) {
       this.logSecurityEvent({
@@ -147,16 +115,6 @@ class Logger {
     ip: string,
     additionalData?: Record<string, any>
   ): void {
-    console.log(JSON.stringify({
-      type: 'authentication',
-      requestId,
-      action,
-      userId,
-      success,
-      ip,
-      timestamp: new Date().toISOString(),
-      ...additionalData
-    }))
 
     if (!success) {
       this.logSecurityEvent({
@@ -177,15 +135,6 @@ class Logger {
     targetUserId?: string,
     additionalData?: Record<string, any>
   ): void {
-    console.log(JSON.stringify({
-      type: 'admin_action',
-      requestId,
-      adminUserId,
-      action,
-      targetUserId,
-      timestamp: new Date().toISOString(),
-      ...additionalData
-    }))
   }
 
   public getSecurityEvents(limit: number = 100): SecurityEvent[] {
@@ -212,7 +161,6 @@ class Logger {
 
   private sendCriticalAlert(event: SecurityEvent): void {
     // In production, implement actual alerting (email, Slack, etc.)
-    console.error(`CRITICAL SECURITY ALERT: ${event.description}`, event)
   }
 }
 
@@ -229,14 +177,6 @@ export function logRequestEnd(
   duration: number,
   userId?: string
 ): void {
-  console.log(JSON.stringify({
-    type: 'request_end',
-    requestId,
-    statusCode,
-    duration,
-    userId,
-    timestamp: new Date().toISOString()
-  }))
 }
 
 export function logRateLimitExceeded(ip: string, userId?: string, endpoint?: string): void {

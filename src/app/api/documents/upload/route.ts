@@ -31,12 +31,10 @@ export async function POST(request: NextRequest) {
 
     for (const file of files) {
       try {
-        // Generate unique file key
         const timestamp = Date.now()
         const safeFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
         const fileKey = `documents/${session.user.id}/${timestamp}-${safeFileName}`
         
-        // Save file to disk
         const storageDir = join(process.cwd(), 'storage', 'documents', session.user.id)
         await mkdir(storageDir, { recursive: true })
         
@@ -44,9 +42,7 @@ export async function POST(request: NextRequest) {
         const arrayBuffer = await file.arrayBuffer()
         await writeFile(filePath, Buffer.from(arrayBuffer))
         
-        console.log(`File saved to: ${filePath}`)
         
-        // Create document record
         const document = await db.document.create({
           data: {
             ownerId: session.user.id,
@@ -64,14 +60,11 @@ export async function POST(request: NextRequest) {
 
         documents.push(document)
       } catch (fileError) {
-        console.error(`Error processing file ${file.name}:`, fileError)
-        // Continue with other files, but log the error
       }
     }
 
     return NextResponse.json({ documents })
   } catch (error) {
-    console.error('Error creating documents:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

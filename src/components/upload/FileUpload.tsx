@@ -136,13 +136,10 @@ export default function FileUpload({ onClose }: FileUploadProps) {
           for (const doc of data.documents) {
             try {
               await offlineManager.saveDocumentForOffline(doc.id)
-              console.log(`Auto-downloaded document: ${doc.title}`)
             } catch (downloadError) {
-              console.warn(`Failed to auto-download document ${doc.title}:`, downloadError)
             }
           }
         } catch (error) {
-          console.warn('Some documents failed to auto-download:', error)
         }
       }
 

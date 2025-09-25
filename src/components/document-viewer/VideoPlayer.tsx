@@ -41,13 +41,6 @@ export default function VideoPlayer({ document }: VideoPlayerProps) {
   useEffect(() => {
     const loadVideo = async () => {
       try {
-        console.log('Loading video for document:', {
-          id: document.id,
-          fileName: document.originalName,
-          mimeType: document.mimeType,
-          fileKey: document.fileKey,
-          fileSize: document.fileSize
-        })
         
         // Add cache control headers for better performance
         const response = await fetch(`/api/documents/${document.id}/download`, {
@@ -57,28 +50,13 @@ export default function VideoPlayer({ document }: VideoPlayerProps) {
           }
         })
         
-        console.log('API response:', {
-          status: response.status,
-          statusText: response.statusText,
-          ok: response.ok,
-          headers: Object.fromEntries(response.headers.entries())
-        })
         
         if (!response.ok) {
           const errorText = await response.text()
-          console.error('API error response:', errorText)
           throw new Error(`Failed to load video: ${response.status} ${response.statusText} - ${errorText}`)
         }
         
         const blob = await response.blob()
-        console.log('Video blob loaded:', {
-          size: blob.size,
-          type: blob.type,
-          mimeType: document.mimeType,
-          fileName: document.originalName,
-          responseStatus: response.status,
-          responseHeaders: Object.fromEntries(response.headers.entries())
-        })
         
         if (blob.size === 0) {
           throw new Error('Empty video file')
@@ -86,28 +64,13 @@ export default function VideoPlayer({ document }: VideoPlayerProps) {
         
         // Check if blob type matches expected MIME type
         if (blob.type !== document.mimeType) {
-          console.warn('MIME type mismatch:', {
-            blobType: blob.type,
-            expectedType: document.mimeType
-          })
         }
         
         const url = URL.createObjectURL(blob)
-        console.log('Video URL created:', url)
         setVideoUrl(url)
         setIsLoading(false)
       } catch (error) {
         const errorMsg = error instanceof Error ? error.message : 'Unknown error'
-        console.error('Error loading video:', {
-          error: error,
-          message: errorMsg,
-          document: {
-            id: document.id,
-            fileName: document.originalName,
-            mimeType: document.mimeType,
-            fileKey: document.fileKey
-          }
-        })
         setErrorMessage(errorMsg)
         setHasError(true)
         setIsLoading(false)
@@ -134,12 +97,6 @@ export default function VideoPlayer({ document }: VideoPlayerProps) {
     const handlePause = () => setIsPlaying(false)
     const handleError = () => {
       const error = video.error
-      console.error('Video playback error:', {
-        code: error?.code,
-        message: error?.message,
-        mimeType: document.mimeType,
-        fileName: document.originalName
-      })
       setHasError(true)
       setIsLoading(false)
     }
@@ -252,12 +209,6 @@ export default function VideoPlayer({ document }: VideoPlayerProps) {
     
     setAudioSyncOffset(prev => {
       const newOffset = prev + offset
-      console.log('Audio sync adjustment:', { 
-        previousOffset: prev, 
-        adjustment: offset, 
-        newOffset,
-        currentTime: video.currentTime
-      })
       
       // Apply sync by seeking to adjusted time
       // This is the most reliable way to sync audio with video
@@ -279,7 +230,6 @@ export default function VideoPlayer({ document }: VideoPlayerProps) {
 
   const resetAudioSync = () => {
     setAudioSyncOffset(0)
-    console.log('Audio sync reset')
   }
 
   const toggleFullscreen = () => {
@@ -374,42 +324,25 @@ export default function VideoPlayer({ document }: VideoPlayerProps) {
         onError={(e) => {
           const target = e.target as HTMLVideoElement
           const error = target.error
-          console.error('Video element error:', {
-            event: e,
-            error: error,
-            code: error?.code,
-            message: error?.message,
-            networkState: target.networkState,
-            readyState: target.readyState,
-            src: target.src,
-            mimeType: document.mimeType,
-            fileName: document.originalName
-          })
           setHasError(true)
           setIsLoading(false)
         }}
         onLoadStart={() => {
-          console.log('Video load started')
           setIsBuffering(true)
         }}
         onCanPlay={() => {
-          console.log('Video can play')
           setIsBuffering(false)
         }}
         onLoadedData={() => {
-          console.log('Video data loaded')
           setIsBuffering(false)
         }}
         onWaiting={() => {
-          console.log('Video waiting for data')
           setIsBuffering(true)
         }}
         onStalled={() => {
-          console.log('Video stalled')
           setIsBuffering(true)
         }}
         onSuspend={() => {
-          console.log('Video suspended')
           setIsBuffering(false)
         }}
       />

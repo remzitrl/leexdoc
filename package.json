@@ -2,6 +2,8 @@
   "name": "leexdoc",
   "version": "0.1.0",
   "private": true,
+  "author": "Ahmet Tural",
+  "description": "Document management and storage system",
   "scripts": {
     "dev": "node ./bin/start-dev.mjs",
     "dev:api": "cross-env NEXT_TELEMETRY_DISABLED=1 NODE_ENV=development NODE_OPTIONS=\"--trace-warnings\" DEBUG=prisma:* next dev -p ${PORT:-3000}",

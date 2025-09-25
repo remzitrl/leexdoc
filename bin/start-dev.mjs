@@ -2,16 +2,14 @@ import { spawn } from 'cross-spawn';
 
 const wait = (ms) => new Promise(r => setTimeout(r, ms));
 const now = () => new Date().toISOString().slice(11, 19);
-const log = (...a) => console.log(`[${now()}]`, ...a);
+const log = () => {};
 
 // Load .env file
 const loadEnv = async () => {
   try {
     const dotenv = await import('dotenv');
     dotenv.config();
-    log('✅ .env yüklendi');
   } catch (e) {
-    log('⚠️  .env yüklenemedi:', e.message);
   }
 };
 
@@ -21,18 +19,14 @@ const validateEnv = () => {
   const missing = required.filter(key => !process.env[key]);
   
   if (missing.length > 0) {
-    console.error(`StartupError: Missing deps. Set DATABASE_URL, NEXTAUTH_SECRET. REDIS_URL is optional.`);
     process.exit(1);
   }
   
   // Check Redis availability
   if (!process.env.REDIS_URL || process.env.REDIS_URL.trim() === '') {
-    log('⚠️  REDIS_URL yok - queue=degraded, ratelimit=disabled');
   } else {
-    log('✅ REDIS_URL mevcut');
   }
   
-  log('✅ Environment variables doğrulandı');
 };
 
 // Check port availability
@@ -44,7 +38,6 @@ const checkPort = async (port, name, tries = 60) => {
         signal: AbortSignal.timeout(1000)
       });
       if (response.ok) {
-        log(`✅ ${name} port ${port} hazır`);
         return true;
       }
     } catch (e) {
@@ -52,7 +45,6 @@ const checkPort = async (port, name, tries = 60) => {
     }
     await wait(1000);
   }
-  log(`⚠️  ${name} port ${port} hazır değil`);
   return false;
 };
 
@@ -88,11 +80,8 @@ const runCommand = async (command, args, timeoutMs = 30000) => {
 // Prisma migrate deploy
 const prismaMigrate = async () => {
   try {
-    log('🗄️ Prisma migrate deploy...');
     await runCommand('npx', ['prisma', 'migrate', 'deploy'], 30000);
-    log('✅ Prisma migrate tamamlandı');
   } catch (e) {
-    console.error('PrismaError: migrate deploy failed (drift?). Options: A) npx prisma db pull && npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > prisma/migrations/000_init/migration.sql && npx prisma migrate resolve --applied 000_init, B) npx prisma migrate reset');
     process.exit(1);
   }
 };
@@ -100,11 +89,8 @@ const prismaMigrate = async () => {
 // Prisma generate
 const prismaGenerate = async () => {
   try {
-    log('🔧 Prisma generate...');
     await runCommand('npx', ['prisma', 'generate'], 15000);
-    log('✅ Prisma generate tamamlandı');
   } catch (e) {
-    console.error('PrismaError: generate failed. Check schema and dependencies.');
     process.exit(1);
   }
 };
@@ -112,7 +98,6 @@ const prismaGenerate = async () => {
 // Start Next.js and wait for health check
 const startNext = async () => {
   const port = process.env.PORT ? Number(process.env.PORT) : 3000;
-  log(`🚀 Next.js başlatılıyor (port ${port})...`);
   
   const child = spawn('npm', ['run', 'dev:api'], {
     stdio: 'inherit',
@@ -128,7 +113,6 @@ const startNext = async () => {
         signal: AbortSignal.timeout(1000)
       });
       if (response.ok) {
-        log('✅ /api/health yanıt verdi');
         return;
       }
     } catch (e) {
@@ -137,13 +121,11 @@ const startNext = async () => {
     await wait(1000);
   }
   
-  console.error('HealthTimeout: Next dev did not respond at /api/health within 25s.');
   process.exit(1);
 };
 
 // Main function
 const main = async () => {
-  log('— Mixora Dev Boot —');
   
   // 1. Load .env
   await loadEnv();
@@ -152,7 +134,6 @@ const main = async () => {
   validateEnv();
   
   // 3. Port checks (non-blocking, just warnings)
-  log('🌐 Port kontrolleri (sadece uyarı)...');
   // No local services needed - using remote PostgreSQL
   
   // 5. Prisma migrate deploy (fail-fast)
@@ -167,6 +148,5 @@ const main = async () => {
 
 // Run main function
 main().catch(e => {
-  console.error('❌ Başlatma hatası:', e.message);
   process.exit(1);
 });
