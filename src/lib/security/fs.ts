@@ -1,5 +1,5 @@
-import path from "node:path";
-import { ERR_DANGEROUS_PATH, WARN_NON_STRICT } from "@/lib/security/messages";
+import * as path from "node:path";
+import { ERR_DANGEROUS_PATH, WARN_NON_STRICT } from "./messages";
 
 export type Strictness = "strict" | "non-strict";
 

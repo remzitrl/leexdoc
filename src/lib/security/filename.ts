@@ -1,4 +1,4 @@
-import { ERR_MALICIOUS_FILE } from "@/lib/security/messages";
+import { ERR_MALICIOUS_FILE } from "./messages";
 
 export function sanitizeFilename(input: string): string {
   const s0 = input.normalize("NFKC");

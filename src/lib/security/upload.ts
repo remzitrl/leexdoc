@@ -1,4 +1,4 @@
-import { ERR_MALICIOUS_FILE } from "@/lib/security/messages";
+import { ERR_MALICIOUS_FILE } from "./messages";
 import { sanitizeFilename } from "./filename";
 
 const MAX = 512 * 1024 * 1024;

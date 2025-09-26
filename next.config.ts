@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
   },
   // Enable standalone output for Docker
   output: 'standalone',
+  // Fix workspace root detection
+  outputFileTracingRoot: '/Users/remzi/Desktop/leexcode',
   // Disable ESLint during build for production deployment
   eslint: {
     ignoreDuringBuilds: true,
@@ -19,6 +21,13 @@ const nextConfig: NextConfig = {
   // Disable TypeScript type checking during build for production deployment
   typescript: {
     ignoreBuildErrors: true,
+  },
+  // Webpack configuration
+  webpack: (config: any) => {
+    config.resolve.extensionAlias = {
+      '.js': ['.ts', '.tsx', '.js', '.jsx'],
+    }
+    return config
   },
 };
 
