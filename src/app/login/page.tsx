@@ -45,7 +45,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-12">
-          <img src="/logo.svg" alt="LeexDoc" className="w-16 h-16 mx-auto mb-6" />
+          <span className="text-6xl font-bold text-gray-900 block mb-6">LeexDoc</span>
           <h1 className="text-2xl font-semibold text-gray-900 mb-2">Welcome back</h1>
           <p className="text-gray-500">Sign in to your account</p>
         </div>

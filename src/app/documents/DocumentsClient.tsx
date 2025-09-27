@@ -274,18 +274,26 @@ export default function DocumentsClient() {
             <div className="flex-shrink-0">
               <div className="flex border border-gray-300 rounded-lg overflow-hidden">
                 <Button
-                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                  variant="ghost"
                   size="icon"
                   onClick={() => setViewMode('grid')}
-                  className="h-12 w-12 rounded-none hover:bg-gray-100 text-gray-700"
+                  className={`h-12 w-12 rounded-none transition-all duration-200 ${
+                    viewMode === 'grid' 
+                      ? 'bg-blue-50 text-blue-600 border-blue-200 shadow-sm' 
+                      : 'text-gray-700 hover:bg-gray-100 focus:bg-gray-100'
+                  } focus:ring-2 focus:ring-blue-200 focus:ring-offset-0 focus:outline-none`}
                 >
                   <Grid3X3 className="w-5 h-5" />
                 </Button>
                 <Button
-                  variant={viewMode === 'list' ? 'default' : 'ghost'}
+                  variant="ghost"
                   size="icon"
                   onClick={() => setViewMode('list')}
-                  className="h-12 w-12 rounded-none hover:bg-gray-100 text-gray-700"
+                  className={`h-12 w-12 rounded-none transition-all duration-200 ${
+                    viewMode === 'list' 
+                      ? 'bg-blue-50 text-blue-600 border-blue-200 shadow-sm' 
+                      : 'text-gray-700 hover:bg-gray-100 focus:bg-gray-100'
+                  } focus:ring-2 focus:ring-blue-200 focus:ring-offset-0 focus:outline-none`}
                 >
                   <List className="w-5 h-5" />
                 </Button>
@@ -310,13 +318,13 @@ export default function DocumentsClient() {
         </div>
       ) : (
         <div className={viewMode === 'grid' 
-          ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr'
+          ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
           : 'space-y-2'
         }>
           {filteredDocuments.map((document) => {
             const IconComponent = categoryIcons[document.category]
             return (
-              <Card key={document.id} className={`card-primary cursor-pointer ${viewMode === 'list' ? 'p-4' : ''}`}>
+              <Card key={document.id} className={`card-primary cursor-pointer h-full ${viewMode === 'list' ? 'p-4' : ''}`}>
                 {viewMode === 'list' ? (
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -363,24 +371,24 @@ export default function DocumentsClient() {
                         size="sm"
                         variant="outline"
                         onClick={() => handleDelete(document)}
-                        className="h-8 w-8 rounded-lg border-gray-300 bg-white text-gray-700 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all duration-200"
+                        className="h-8 w-8 rounded-lg border-gray-300 bg-white text-gray-700 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all duration-200 cursor-pointer"
                       >
                         <Trash2 className="w-3 h-3" />
                       </Button>
                     </div>
                   </div>
                 ) : (
-                  <div className="flex flex-col h-full p-4">
+                  <div className="flex flex-col h-full p-4 overflow-hidden">
                     <div className="flex items-start justify-between mb-4 flex-shrink-0">
                       <div className="flex items-center gap-3 flex-1 min-w-0">
                         <div className="p-2 bg-gray-200 rounded-lg flex-shrink-0">
                           <IconComponent className="w-5 h-5 text-gray-600" />
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-sm font-semibold text-gray-900 leading-tight" title={document.title}>
-                            {truncateTitle(document.title, 25)}
+                        <div className="flex-1 min-w-0 overflow-hidden">
+                          <h3 className="text-sm font-semibold text-gray-900 leading-tight truncate" title={document.title}>
+                            {document.title}
                           </h3>
-                          <p className="text-xs text-gray-500 mt-1 font-medium">
+                          <p className="text-xs text-gray-500 mt-1 font-medium truncate">
                             {formatFileSize(document.fileSize)}
                           </p>
                         </div>
@@ -390,26 +398,26 @@ export default function DocumentsClient() {
                       </Badge>
                     </div>
                     
-                    <div className="flex-1 flex flex-col">
+                    <div className="flex-1 flex flex-col min-h-0">
                       <div className="flex items-center justify-between text-xs text-gray-500 mb-4 flex-shrink-0">
-                        <span className="font-medium">{formatDate(document.uploadedAt)}</span>
-                        <span className="font-medium">{document.accessCount} views</span>
+                        <span className="font-medium truncate">{formatDate(document.uploadedAt)}</span>
+                        <span className="font-medium flex-shrink-0 ml-2">{document.accessCount} views</span>
                       </div>
                       
-                      <div className="flex gap-2 mt-auto">
+                      <div className="flex gap-1 mt-auto flex-wrap">
                         <Button
                           size="sm"
                           variant="outline"
-                          className="flex-1 h-8 rounded-lg border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition-all duration-200 text-xs cursor-pointer"
+                          className="flex-1 h-8 rounded-lg border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition-all duration-200 text-xs cursor-pointer min-w-0"
                           onClick={() => handleViewDocument(document)}
                         >
-                          <Eye className="w-3 h-3 mr-1" />
-                          View
+                          <Eye className="w-3 h-3 mr-1 flex-shrink-0" />
+                          <span className="truncate">View</span>
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-8 w-8 rounded-lg border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition-all duration-200"
+                          className="h-8 w-8 rounded-lg border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition-all duration-200 flex-shrink-0"
                           onClick={() => handleDownload(document)}
                         >
                           <Download className="w-3 h-3" />
@@ -417,13 +425,13 @@ export default function DocumentsClient() {
                         <DocumentDownloadButton
                           documentId={document.id}
                           documentTitle={document.title}
-                          className="h-8"
+                          className="h-8 flex-shrink-0"
                         />
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => handleDelete(document)}
-                          className="h-8 w-8 rounded-lg border-gray-300 bg-white text-gray-700 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all duration-200"
+                          className="h-8 w-8 rounded-lg border-gray-300 bg-white text-gray-700 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all duration-200 flex-shrink-0 cursor-pointer"
                         >
                           <Trash2 className="w-3 h-3" />
                         </Button>
