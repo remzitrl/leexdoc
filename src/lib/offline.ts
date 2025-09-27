@@ -52,9 +52,10 @@ export const getOfflineDB = async (): Promise<IDBPDatabase<TrackDB>> => {
 }
 
 export const registerServiceWorker = async (): Promise<void> => {
-  if ('serviceWorker' in navigator) {
+  if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
     const wb = new Workbox('/sw.js')
     
+    // Only register in production
     wb.addEventListener('controlling', () => {
       window.location.reload()
     })

@@ -1,0 +1,31 @@
+{
+  "timestamp": "2025-09-27T19:30:06.436Z",
+  "summary": {
+    "critical": 3,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "warnings": 0
+  },
+  "issues": [
+    {
+      "type": "critical",
+      "category": "environment",
+      "message": "Missing required environment variable: NEXTAUTH_SECRET",
+      "recommendation": "Set NEXTAUTH_SECRET in your environment configuration"
+    },
+    {
+      "type": "critical",
+      "category": "environment",
+      "message": "Missing required environment variable: DATABASE_URL",
+      "recommendation": "Set DATABASE_URL in your environment configuration"
+    },
+    {
+      "type": "critical",
+      "category": "environment",
+      "message": "Missing required environment variable: NEXTAUTH_URL",
+      "recommendation": "Set NEXTAUTH_URL in your environment configuration"
+    }
+  ],
+  "warnings": []
+}
