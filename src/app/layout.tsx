@@ -50,7 +50,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
-      <body className="font-sans bg-gray-900 min-h-screen antialiased dark">
+      <body className="font-sans bg-gray-50 min-h-screen antialiased">
         <AuthSessionProvider>
           <div className="flex flex-col h-screen">
             <Header />

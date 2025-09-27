@@ -2,9 +2,6 @@ import { storage } from './storage/index'
 import { generateUniqueKey } from './storage/validation'
 import { StorageError } from './storage/types'
 import { detectMaliciousUpload } from './security/upload'
-import './storage/index';
-import './storage/validation';
-import './storage/types';
 
 
 export class StorageManager {

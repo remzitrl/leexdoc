@@ -33,12 +33,12 @@ export default function ClientHome() {
                 Library
               </CardTitle>
               <CardDescription>
-                Browse your music collection
+                Browse your document collection
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Button asChild className="w-full">
-                <Link href="/library">View Library</Link>
+                <Link href="/documents">View Documents</Link>
               </Button>
             </CardContent>
           </Card>

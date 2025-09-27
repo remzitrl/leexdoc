@@ -96,12 +96,12 @@ export function Header() {
 
   if (status === 'loading') {
     return (
-      <header className="bg-gray-800 border-b border-gray-700 shadow-sm">
+      <header className="bg-white border-b border-gray-200 shadow-sm">
         <div className="px-8 py-6">
           <div className="flex items-center justify-between">
-            <div className="h-10 w-40 bg-gray-700 rounded-xl animate-pulse" />
-            <div className="h-10 w-80 bg-gray-700 rounded-xl animate-pulse" />
-            <div className="h-10 w-10 bg-gray-700 rounded-full animate-pulse" />
+            <div className="h-10 w-40 bg-gray-200 rounded-lg animate-pulse" />
+            <div className="h-10 w-80 bg-gray-200 rounded-lg animate-pulse" />
+            <div className="h-10 w-10 bg-gray-200 rounded-full animate-pulse" />
           </div>
         </div>
       </header>
@@ -110,7 +110,7 @@ export function Header() {
 
   if (!session) {
     return (
-      <header className="bg-gray-800 border-b border-gray-700 shadow-sm">
+      <header className="bg-white border-b border-gray-200 shadow-sm">
         <div className="px-8 py-6">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center space-x-3">
@@ -121,7 +121,7 @@ export function Header() {
             
             <div className="flex items-center space-x-4">
               <Link href="/login">
-                <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-700">
+                <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50">
                   Sign In
                 </Button>
               </Link>
@@ -138,7 +138,7 @@ export function Header() {
   }
 
   return (
-    <header className="bg-gray-800 border-b border-gray-700 shadow-sm">
+    <header className="bg-white border-b border-gray-200 shadow-sm">
       <div className="px-8 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -151,13 +151,13 @@ export function Header() {
           {/* Search Bar */}
           <form onSubmit={handleSearch} className="flex-1 max-w-2xl mx-8">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
               <Input
                 type="text"
                 placeholder="Search documents, files, and more..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-12 bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus:bg-gray-700 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 h-12 text-lg rounded-xl shadow-sm focus:shadow-md transition-all duration-200"
+                className="pl-12 bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 focus:bg-white focus:border-gray-400 focus:ring-2 focus:ring-gray-200 h-12 text-lg rounded-lg shadow-sm focus:shadow-md transition-all duration-200"
               />
             </div>
           </form>
@@ -169,37 +169,37 @@ export function Header() {
             {/* User Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="text-gray-300 hover:bg-gray-700 p-2 rounded-xl">
-                  <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg">
-                    <User className="w-5 h-5 text-white" />
+                <Button variant="ghost" className="text-gray-700 hover:bg-gray-100 p-2 rounded-lg">
+                  <div className="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center">
+                    <User className="w-5 h-5 text-gray-600" />
                   </div>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64 bg-gray-800 border border-gray-700 shadow-xl rounded-xl p-2">
-                <div className="px-4 py-3 border-b border-gray-700">
-                  <p className="text-sm font-semibold text-white">{session.user?.name}</p>
-                  <p className="text-xs text-gray-400">{session.user?.email}</p>
+              <DropdownMenuContent align="end" className="w-64 bg-white border border-gray-200 shadow-xl rounded-lg p-2">
+                <div className="px-4 py-3 border-b border-gray-200">
+                  <p className="text-sm font-semibold text-gray-900">{session.user?.name}</p>
+                  <p className="text-xs text-gray-500">{session.user?.email}</p>
                 </div>
                 <DropdownMenuItem asChild>
-                  <Link href="/settings" className="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors text-gray-200">
-                    <Settings className="w-4 h-4 mr-3 text-gray-400" />
+                  <Link href="/settings" className="flex items-center px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors text-gray-700">
+                    <Settings className="w-4 h-4 mr-3 text-gray-500" />
                     Settings
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/documents" className="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors text-gray-200">
-                    <FileText className="w-4 h-4 mr-3 text-gray-400" />
+                  <Link href="/documents" className="flex items-center px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors text-gray-700">
+                    <FileText className="w-4 h-4 mr-3 text-gray-500" />
                     My Documents
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/offline" className="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors text-gray-200">
-                    <Download className="w-4 h-4 mr-3 text-gray-400" />
+                  <Link href="/offline" className="flex items-center px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors text-gray-700">
+                    <Download className="w-4 h-4 mr-3 text-gray-500" />
                     Offline Library
                   </Link>
                 </DropdownMenuItem>
-                <div className="border-t border-gray-700 my-2"></div>
-                <DropdownMenuItem onClick={handleSignOut} className="text-red-400 px-4 py-3 rounded-lg hover:bg-red-900/20 transition-colors">
+                <div className="border-t border-gray-200 my-2"></div>
+                <DropdownMenuItem onClick={handleSignOut} className="text-red-600 px-4 py-3 rounded-lg hover:bg-red-50 transition-colors">
                   <LogOut className="w-4 h-4 mr-3" />
                   Sign Out
                 </DropdownMenuItem>

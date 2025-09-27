@@ -38,13 +38,13 @@ const categoryIcons = {
 }
 
 const categoryColors = {
-  PDF: 'bg-red-100 text-red-800',
-  Audio: 'bg-yellow-100 text-yellow-800',
-  Video: 'bg-blue-100 text-blue-800',
-  Image: 'bg-green-100 text-green-800',
-  Archive: 'bg-orange-100 text-orange-800',
+  PDF: 'bg-gray-100 text-gray-800',
+  Audio: 'bg-gray-200 text-gray-700',
+  Video: 'bg-gray-300 text-gray-800',
+  Image: 'bg-gray-200 text-gray-700',
+  Archive: 'bg-gray-300 text-gray-800',
   Document: 'bg-gray-100 text-gray-800',
-  Other: 'bg-slate-100 text-slate-800'
+  Other: 'bg-gray-200 text-gray-700'
 }
 
 export default function DocumentsClient() {
@@ -183,10 +183,10 @@ export default function DocumentsClient() {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
-          <div className="w-16 h-16 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600"></div>
+          <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center mx-auto mb-6">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-600"></div>
           </div>
-          <p className="text-lg text-slate-600 font-medium">Loading documents...</p>
+          <p className="text-lg text-gray-600 font-medium">Loading documents...</p>
         </div>
       </div>
     )
@@ -197,8 +197,8 @@ export default function DocumentsClient() {
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-4xl font-bold text-white font-poppins">Documents</h1>
-          <p className="text-gray-300 mt-2 text-lg">Access all your documents offline - PDFs, videos, audio files, and more</p>
+          <h1 className="text-4xl font-bold text-gray-900 font-poppins">Documents</h1>
+          <p className="text-gray-600 mt-2 text-lg">Access all your documents offline - PDFs, videos, audio files, and more</p>
         </div>
         <Button onClick={() => setIsUploadOpen(true)} className="btn-primary flex items-center gap-3 px-8 py-4 h-14 text-lg">
           <Upload className="w-5 h-5" />
@@ -207,17 +207,17 @@ export default function DocumentsClient() {
       </div>
 
       {/* Filters and Search */}
-      <div className="bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-700 mb-8">
+      <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 mb-8">
         <div className="flex flex-col xl:flex-row gap-4">
           {/* Search Bar */}
           <div className="flex-1 min-w-0">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
               <Input
                 placeholder="Search documents, files, and more..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-12 bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400 focus:bg-gray-700 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 h-12 text-lg rounded-xl w-full"
+                className="pl-12 bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 focus:bg-white focus:border-gray-400 focus:ring-2 focus:ring-gray-200 h-12 text-lg rounded-lg w-full"
               />
             </div>
           </div>
@@ -227,7 +227,7 @@ export default function DocumentsClient() {
             {/* Category Filter */}
             <div className="flex-shrink-0">
               <Select value={filterCategory || 'all'} onValueChange={(value) => setFilterCategory(value === 'all' ? null : value)}>
-                <SelectTrigger className="w-40 h-12 rounded-xl border-gray-600 bg-gray-700 text-gray-100">
+                <SelectTrigger className="w-40 h-12 rounded-lg border-gray-300 bg-white text-gray-900">
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
@@ -246,7 +246,7 @@ export default function DocumentsClient() {
             {/* Sort By Filter */}
             <div className="flex-shrink-0">
               <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
-                <SelectTrigger className="w-32 h-12 rounded-xl border-gray-600 bg-gray-700 text-gray-100">
+                <SelectTrigger className="w-32 h-12 rounded-lg border-gray-300 bg-white text-gray-900">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>
@@ -264,7 +264,7 @@ export default function DocumentsClient() {
                 variant="outline"
                 size="icon"
                 onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                className="h-12 w-12 rounded-xl border-gray-600 bg-gray-700 text-gray-100 hover:bg-gray-600"
+                className="h-12 w-12 rounded-lg border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
               >
                 {sortOrder === 'asc' ? '↑' : '↓'}
               </Button>
@@ -272,12 +272,12 @@ export default function DocumentsClient() {
 
             {/* View Mode Toggle */}
             <div className="flex-shrink-0">
-              <div className="flex border border-gray-600 rounded-xl overflow-hidden">
+              <div className="flex border border-gray-300 rounded-lg overflow-hidden">
                 <Button
                   variant={viewMode === 'grid' ? 'default' : 'ghost'}
                   size="icon"
                   onClick={() => setViewMode('grid')}
-                  className="h-12 w-12 rounded-none hover:bg-gray-600 text-gray-100"
+                  className="h-12 w-12 rounded-none hover:bg-gray-100 text-gray-700"
                 >
                   <Grid3X3 className="w-5 h-5" />
                 </Button>
@@ -285,7 +285,7 @@ export default function DocumentsClient() {
                   variant={viewMode === 'list' ? 'default' : 'ghost'}
                   size="icon"
                   onClick={() => setViewMode('list')}
-                  className="h-12 w-12 rounded-none hover:bg-gray-600 text-gray-100"
+                  className="h-12 w-12 rounded-none hover:bg-gray-100 text-gray-700"
                 >
                   <List className="w-5 h-5" />
                 </Button>
@@ -297,12 +297,12 @@ export default function DocumentsClient() {
 
       {/* Documents Grid/List */}
       {filteredDocuments.length === 0 ? (
-        <div className="text-center py-20 bg-gray-800 rounded-2xl shadow-sm border border-gray-700">
-          <div className="w-24 h-24 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <FileText className="w-12 h-12 text-yellow-600" />
+        <div className="text-center py-20 bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center mx-auto mb-6">
+            <FileText className="w-12 h-12 text-gray-600" />
           </div>
-          <h3 className="text-2xl font-bold text-white mb-3">No documents yet</h3>
-          <p className="text-gray-300 mb-8 text-lg max-w-md mx-auto">Upload your first document to get started with offline access to all your files</p>
+          <h3 className="text-2xl font-bold text-gray-900 mb-3">No documents yet</h3>
+          <p className="text-gray-600 mb-8 text-lg max-w-md mx-auto">Upload your first document to get started with offline access to all your files</p>
           <Button onClick={() => setIsUploadOpen(true)} className="btn-primary px-8 py-4 h-14 text-lg">
             <Upload className="w-5 h-5 mr-3" />
             Upload Files
@@ -320,14 +320,14 @@ export default function DocumentsClient() {
                 {viewMode === 'list' ? (
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <div className="p-2 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-lg flex-shrink-0">
-                        <IconComponent className="w-5 h-5 text-yellow-600" />
+                      <div className="p-2 bg-gray-200 rounded-lg flex-shrink-0">
+                        <IconComponent className="w-5 h-5 text-gray-600" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <CardTitle className="text-sm font-semibold text-white break-words truncate">
+                        <CardTitle className="text-sm font-semibold text-gray-900 break-words truncate">
                           {document.title}
                         </CardTitle>
-                        <div className="flex items-center gap-4 text-xs text-gray-400 mt-1">
+                        <div className="flex items-center gap-4 text-xs text-gray-500 mt-1">
                           <span>{formatFileSize(document.fileSize)}</span>
                           <span>{formatDate(document.uploadedAt)}</span>
                           <span>{document.accessCount} views</span>
@@ -341,7 +341,7 @@ export default function DocumentsClient() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="h-8 w-8 rounded-lg border-gray-600 bg-gray-700 text-gray-100 hover:bg-yellow-500 hover:border-yellow-500 hover:text-white transition-all duration-200 cursor-pointer"
+                        className="h-8 w-8 rounded-lg border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition-all duration-200 cursor-pointer"
                         onClick={() => handleViewDocument(document)}
                       >
                         <Eye className="w-3 h-3" />
@@ -349,7 +349,7 @@ export default function DocumentsClient() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="h-8 w-8 rounded-lg border-gray-600 bg-gray-700 text-gray-100 hover:bg-blue-500 hover:border-blue-500 hover:text-white transition-all duration-200"
+                        className="h-8 w-8 rounded-lg border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition-all duration-200"
                         onClick={() => handleDownload(document)}
                       >
                         <Download className="w-3 h-3" />
@@ -363,7 +363,7 @@ export default function DocumentsClient() {
                         size="sm"
                         variant="outline"
                         onClick={() => handleDelete(document)}
-                        className="h-8 w-8 rounded-lg border-gray-600 bg-gray-700 text-gray-100 hover:bg-red-500 hover:border-red-500 hover:text-white transition-all duration-200"
+                        className="h-8 w-8 rounded-lg border-gray-300 bg-white text-gray-700 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all duration-200"
                       >
                         <Trash2 className="w-3 h-3" />
                       </Button>
@@ -373,14 +373,14 @@ export default function DocumentsClient() {
                   <div className="flex flex-col h-full p-4">
                     <div className="flex items-start justify-between mb-4 flex-shrink-0">
                       <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <div className="p-2 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-lg flex-shrink-0">
-                          <IconComponent className="w-5 h-5 text-yellow-600" />
+                        <div className="p-2 bg-gray-200 rounded-lg flex-shrink-0">
+                          <IconComponent className="w-5 h-5 text-gray-600" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-sm font-semibold text-white leading-tight" title={document.title}>
+                          <h3 className="text-sm font-semibold text-gray-900 leading-tight" title={document.title}>
                             {truncateTitle(document.title, 25)}
                           </h3>
-                          <p className="text-xs text-gray-400 mt-1 font-medium">
+                          <p className="text-xs text-gray-500 mt-1 font-medium">
                             {formatFileSize(document.fileSize)}
                           </p>
                         </div>
@@ -391,7 +391,7 @@ export default function DocumentsClient() {
                     </div>
                     
                     <div className="flex-1 flex flex-col">
-                      <div className="flex items-center justify-between text-xs text-gray-400 mb-4 flex-shrink-0">
+                      <div className="flex items-center justify-between text-xs text-gray-500 mb-4 flex-shrink-0">
                         <span className="font-medium">{formatDate(document.uploadedAt)}</span>
                         <span className="font-medium">{document.accessCount} views</span>
                       </div>
@@ -400,7 +400,7 @@ export default function DocumentsClient() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="flex-1 h-8 rounded-lg border-gray-600 bg-gray-700 text-gray-100 hover:bg-yellow-500 hover:border-yellow-500 hover:text-white transition-all duration-200 text-xs cursor-pointer"
+                          className="flex-1 h-8 rounded-lg border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition-all duration-200 text-xs cursor-pointer"
                           onClick={() => handleViewDocument(document)}
                         >
                           <Eye className="w-3 h-3 mr-1" />
@@ -409,7 +409,7 @@ export default function DocumentsClient() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-8 w-8 rounded-lg border-gray-600 bg-gray-700 text-gray-100 hover:bg-blue-500 hover:border-blue-500 hover:text-white transition-all duration-200"
+                          className="h-8 w-8 rounded-lg border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition-all duration-200"
                           onClick={() => handleDownload(document)}
                         >
                           <Download className="w-3 h-3" />
@@ -423,7 +423,7 @@ export default function DocumentsClient() {
                           size="sm"
                           variant="outline"
                           onClick={() => handleDelete(document)}
-                          className="h-8 w-8 rounded-lg border-gray-600 bg-gray-700 text-gray-100 hover:bg-red-500 hover:border-red-500 hover:text-white transition-all duration-200"
+                          className="h-8 w-8 rounded-lg border-gray-300 bg-white text-gray-700 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all duration-200"
                         >
                           <Trash2 className="w-3 h-3" />
                         </Button>
@@ -440,14 +440,14 @@ export default function DocumentsClient() {
       {/* Upload Modal */}
       {isUploadOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm">
-          <div className="bg-gray-800 rounded-2xl p-8 w-full max-w-lg mx-4 shadow-2xl">
+          <div className="bg-white rounded-lg p-8 w-full max-w-lg mx-4 shadow-2xl">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">Upload Files</h2>
+              <h2 className="text-2xl font-bold text-gray-900">Upload Files</h2>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsUploadOpen(false)}
-                className="text-gray-400 hover:text-gray-200 hover:bg-gray-700 rounded-xl"
+                className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg"
               >
                 ×
               </Button>
