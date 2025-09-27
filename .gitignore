@@ -149,7 +149,7 @@ docs/
 scripts/
 
 # Storage (will be mounted as volume)
-storage/
+/storage/
 
 # Prisma
 prisma/migrations/
