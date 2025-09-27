@@ -118,7 +118,6 @@ dist
 
 # Gatsby files
 .cache/
-public
 
 # Storybook build outputs
 .out
@@ -129,7 +128,6 @@ tmp/
 temp/
 
 # Docker
-.dockerignore
 docker-compose*.yml
 
 # CapRover
