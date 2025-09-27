@@ -12,8 +12,6 @@ const nextConfig: NextConfig = {
   },
   // Enable standalone output for Docker
   output: 'standalone',
-  // Fix workspace root detection
-  outputFileTracingRoot: '/Users/remzi/Desktop/leexcode',
   // Disable ESLint during build for production deployment
   eslint: {
     ignoreDuringBuilds: true,
