@@ -142,7 +142,7 @@ tests/
 *.spec.ts
 
 # Documentation
-
+*.md
 docs/
 
 # Scripts
