@@ -1,168 +1,168 @@
-# LeexDoc - Doküman Yönetim Sistemi
+# LeexDoc - Document Management System
 
-LeexDoc, modern web teknolojileri kullanılarak geliştirilmiş kapsamlı bir doküman yönetim ve depolama sistemidir.
+LeexDoc is a comprehensive document management and storage system built with modern web technologies.
 
-## Proje Yapısı
+## Project Structure
 
-### 📁 Ana Dizinler
+### Main Directories
 
 ```
 leexcode/
-├── bin/                    # Geliştirme ve başlatma scriptleri
-├── prisma/                 # Veritabanı şeması ve migrasyonları
-├── public/                 # Statik dosyalar (ikonlar, manifest, PWA dosyaları)
-├── scripts/                # Sistem kurulum ve doğrulama scriptleri
-├── source_files/           # Docker ve deployment dosyaları
-└── src/                    # Ana uygulama kaynak kodu
+├── bin/                    # Development and startup scripts
+├── prisma/                 # Database schema and migrations
+├── public/                 # Static files (icons, manifest, PWA files)
+├── scripts/                # System setup and validation scripts
+├── source_files/           # Docker and deployment files
+└── src/                    # Main application source code
 ```
 
-### 🔧 Konfigürasyon Dosyaları
+### Configuration Files
 
-- `package.json` - Proje bağımlılıkları ve scriptler
-- `next.config.ts` - Next.js konfigürasyonu
-- `tsconfig.json` - TypeScript konfigürasyonu
-- `eslint.config.mjs` - ESLint kuralları
-- `postcss.config.mjs` - PostCSS konfigürasyonu
-- `components.json` - UI bileşen konfigürasyonu
+- `package.json` - Project dependencies and scripts
+- `next.config.ts` - Next.js configuration
+- `tsconfig.json` - TypeScript configuration
+- `eslint.config.mjs` - ESLint rules
+- `postcss.config.mjs` - PostCSS configuration
+- `components.json` - UI component configuration
 
-### 🗄️ Veritabanı (Prisma)
+### Database (Prisma)
 
 ```
 prisma/
-├── migrations/             # Veritabanı migrasyonları
-├── schema.prisma          # Veritabanı şeması
-└── seed.ts               # Veritabanı seed verileri
+├── migrations/             # Database migrations
+├── schema.prisma          # Database schema
+└── seed.ts               # Database seed data
 ```
 
-**Ana Modeller:**
-- `User` - Kullanıcı bilgileri
-- `Document` - Doküman metadata'sı
-- `Download` - İndirme durumu takibi
-- `UserSetting` - Kullanıcı tercihleri
-- `PasswordResetToken` - Şifre sıfırlama tokenları
+**Main Models:**
+- `User` - User information
+- `Document` - Document metadata
+- `Download` - Download status tracking
+- `UserSetting` - User preferences
+- `PasswordResetToken` - Password reset tokens
 
-### 🎨 Frontend Yapısı (src/)
+### Frontend Structure (src/)
 
-#### 📱 Uygulama Sayfaları (app/)
+#### Application Pages (app/)
 ```
 app/
-├── (auth)/                # Kimlik doğrulama sayfaları
+├── (auth)/                # Authentication pages
 │   ├── forgot-password/
 │   └── reset-password/
-├── admin/                 # Admin paneli
-├── api/                   # API endpoint'leri
-│   ├── admin/            # Admin API'leri
-│   ├── auth/             # Kimlik doğrulama API'leri
-│   ├── documents/        # Doküman API'leri
-│   ├── storage/          # Depolama API'leri
-│   └── user/             # Kullanıcı API'leri
-├── documents/            # Doküman listesi sayfası
-├── downloads/            # İndirilen dosyalar
-├── upload/               # Dosya yükleme sayfası
-├── settings/             # Kullanıcı ayarları
-└── archive/              # Arşiv sayfası
+├── admin/                 # Admin panel
+├── api/                   # API endpoints
+│   ├── admin/            # Admin APIs
+│   ├── auth/             # Authentication APIs
+│   ├── documents/        # Document APIs
+│   ├── storage/          # Storage APIs
+│   └── user/             # User APIs
+├── documents/            # Document listing page
+├── downloads/            # Downloaded files
+├── upload/               # File upload page
+├── settings/             # User settings
+└── archive/              # Archive page
 ```
 
-#### 🧩 Bileşenler (components/)
+#### Components (components/)
 ```
 components/
-├── document-viewer/       # Doküman görüntüleme bileşenleri
+├── document-viewer/       # Document viewing components
 │   ├── PDFViewer.tsx
 │   ├── ImageViewer.tsx
 │   ├── VideoPlayer.tsx
 │   ├── AudioPlayer.tsx
 │   └── TextViewer.tsx
-├── layout/               # Layout bileşenleri
-├── offline/              # Offline çalışma bileşenleri
-├── upload/               # Yükleme bileşenleri
-└── ui/                   # Temel UI bileşenleri
+├── layout/               # Layout components
+├── offline/              # Offline functionality components
+├── upload/               # Upload components
+└── ui/                   # Basic UI components
 ```
 
-#### 🔧 Kütüphaneler (lib/)
+#### Libraries (lib/)
 ```
 lib/
-├── auth/                 # Kimlik doğrulama
-├── hooks/                # React hook'ları
-├── security/             # Güvenlik fonksiyonları
-├── storage/              # Depolama yönetimi
-├── offline/              # Offline veritabanı
-├── audio-processing/     # Ses işleme
-└── validations/          # Form validasyonları
+├── auth/                 # Authentication
+├── hooks/                # React hooks
+├── security/             # Security functions
+├── storage/              # Storage management
+├── offline/              # Offline database
+├── audio-processing/     # Audio processing
+└── validations/          # Form validations
 ```
 
-### 🚀 Geliştirme Araçları (bin/)
+### Development Tools (bin/)
 
-- `start-dev.mjs` - Geliştirme sunucusu başlatma
-- `diagnose.mjs` - Sistem teşhisi
-- `env-validate.mjs` - Ortam değişkeni doğrulama
-- `load-env.mjs` - Ortam değişkeni yükleme
+- `start-dev.mjs` - Development server startup
+- `diagnose.mjs` - System diagnosis
+- `env-validate.mjs` - Environment variable validation
+- `load-env.mjs` - Environment variable loading
 
-### 📜 Sistem Scriptleri (scripts/)
+### System Scripts (scripts/)
 
-- `setup.sh` - Sistem kurulumu
-- `init-minio.sh` - MinIO depolama kurulumu
-- `create-admin.js` - Admin kullanıcı oluşturma
-- `validate-system.js` - Sistem doğrulama
+- `setup.sh` - System setup
+- `init-minio.sh` - MinIO storage setup
+- `create-admin.js` - Admin user creation
+- `validate-system.js` - System validation
 
-### 🎯 Özellikler
+### Features
 
-#### 📄 Doküman Yönetimi
-- PDF, resim, video, ses dosyası desteği
-- Kategori bazlı organizasyon
-- Etiket sistemi
-- Arama ve filtreleme
+#### Document Management
+- PDF, image, video, audio file support
+- Category-based organization
+- Tag system
+- Search and filtering
 
-#### 🔐 Güvenlik
-- JWT tabanlı kimlik doğrulama
-- Şifre sıfırlama sistemi
-- Dosya güvenlik validasyonu
+#### Security
+- JWT-based authentication
+- Password reset system
+- File security validation
 - Rate limiting
 
-#### 💾 Depolama
-- S3 uyumlu depolama (MinIO/AWS S3)
-- Yerel disk depolama seçeneği
-- Thumbnail oluşturma
-- Dosya metadata yönetimi
+#### Storage
+- S3-compatible storage (MinIO/AWS S3)
+- Local disk storage option
+- Thumbnail generation
+- File metadata management
 
-#### 📱 PWA Desteği
-- Offline çalışma
+#### PWA Support
+- Offline functionality
 - Service Worker
 - App manifest
-- Push bildirimleri
+- Push notifications
 
-#### 🎵 Medya İşleme
-- Ses dosyası waveform oluşturma
-- Video thumbnail çıkarma
-- FFmpeg entegrasyonu
-- Metadata çıkarma
+#### Media Processing
+- Audio file waveform generation
+- Video thumbnail extraction
+- FFmpeg integration
+- Metadata extraction
 
-### 🛠️ Teknoloji Stack'i
+### Technology Stack
 
 - **Frontend:** Next.js 15, React 19, TypeScript
 - **Styling:** Tailwind CSS, Radix UI
 - **Backend:** Next.js API Routes
-- **Veritabanı:** PostgreSQL, Prisma ORM
-- **Depolama:** AWS S3 / MinIO
+- **Database:** PostgreSQL, Prisma ORM
+- **Storage:** AWS S3 / MinIO
 - **Cache:** Redis, BullMQ
-- **Kimlik Doğrulama:** NextAuth.js
+- **Authentication:** NextAuth.js
 - **PWA:** Next-PWA, Workbox
-- **Medya İşleme:** FFmpeg, Sharp
-- **Test:** Vitest, Playwright
+- **Media Processing:** FFmpeg, Sharp
+- **Testing:** Vitest, Playwright
 
-### 📦 Bağımlılıklar
+### Dependencies
 
-#### Ana Bağımlılıklar
-- Next.js ve React ekosistemi
-- Prisma ORM ve PostgreSQL client
-- AWS SDK (S3 entegrasyonu)
-- NextAuth.js (kimlik doğrulama)
-- BullMQ (kuyruk yönetimi)
-- FFmpeg (medya işleme)
+#### Main Dependencies
+- Next.js and React ecosystem
+- Prisma ORM and PostgreSQL client
+- AWS SDK (S3 integration)
+- NextAuth.js (authentication)
+- BullMQ (queue management)
+- FFmpeg (media processing)
 
-#### UI Kütüphaneleri
-- Radix UI bileşenleri
-- Lucide React (ikonlar)
-- React Dropzone (dosya yükleme)
-- Zustand (state yönetimi)
+#### UI Libraries
+- Radix UI components
+- Lucide React (icons)
+- React Dropzone (file upload)
+- Zustand (state management)
 
-Bu proje, modern web geliştirme standartlarına uygun olarak tasarlanmış, ölçeklenebilir ve güvenli bir doküman yönetim sistemidir.
+This project is a scalable and secure document management system designed according to modern web development standards.
